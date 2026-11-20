@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Quizzes{% endblock %}
+
+{% block content %}
+<h1>Quizzes</h1>
+<p class="lede">Test your security knowledge by topic.</p>
+{% if topics %}
+<ul class="poll-list">
+    {% for topic in topics %}
+    <li class="card">
+        <h2><a href="{% url 'quizzes:topic' topic.slug %}">{{ topic.name }}</a></h2>
+        <p class="meta">{{ topic.quiz_count }} quiz{{ topic.quiz_count|pluralize:"zes" }}</p>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p class="empty">No quizzes are available yet.</p>
+{% endif %}
+{% if user.is_authenticated %}
+<p><a href="{% url 'quizzes:attempts' %}">My attempts</a></p>
+{% endif %}
+{% endblock %}

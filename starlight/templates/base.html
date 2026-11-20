@@ -1,0 +1,39 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <title>{% block title %}Home{% endblock %} | Starlight</title>
+    <link rel="stylesheet" href="{% static 'starlight/site.css' %}">
+    {% block extrahead %}{% endblock %}
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            {% block brand %}<a class="brand" href="{% url 'home' %}">Starlight</a>{% endblock %}
+            <nav class="site-nav" aria-label="Main">
+                {% block nav %}
+                <a href="{% url 'polls:index' %}">Polls</a>
+                <a href="{% url 'quizzes:index' %}">Quizzes</a>
+                {% if user.is_authenticated %}
+                    <span class="meta">{{ user.get_username }}</span>
+                    <form method="post" action="{% url 'accounts:logout' %}">{% csrf_token %}<button class="link-button" type="submit">Log out</button></form>
+                {% else %}
+                    <a href="{% url 'accounts:login' %}">Log in</a>
+                    <a href="{% url 'accounts:signup' %}">Sign up</a>
+                {% endif %}
+                {% endblock %}
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">{% block footer %}Built by Kishin · <a href="{% url 'admin:index' %}">Admin</a>{% endblock %}</div>
+    </footer>
+</body>
+</html>

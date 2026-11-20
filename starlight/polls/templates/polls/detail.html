@@ -1,0 +1,33 @@
+{% extends "polls/base.html" %}
+
+{% block title %}{{ question.question_text }}{% endblock %}
+
+{% block content %}
+<form class="card" action="{% url 'polls:vote' question.id %}" method="post">
+    {% csrf_token %}
+    <fieldset>
+        <legend><h1>{{ question.question_text }}</h1></legend>
+        {% if error_message %}<p class="error" role="alert">{{ error_message }}</p>{% endif %}
+        {% for choice in question.choice_set.all %}
+            <div class="choice">
+                <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}"{% if not user.is_authenticated or has_voted %} disabled{% endif %}>
+                <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label>
+            </div>
+        {% empty %}
+            <p class="empty">This poll has no choices yet.</p>
+        {% endfor %}
+    </fieldset>
+    <div class="actions">
+        {% if not user.is_authenticated %}
+            <a class="button" href="{% url 'accounts:login' %}?next={{ request.path|urlencode }}">Log in to vote</a>
+        {% elif has_voted %}
+            {% if not error_message %}<p class="meta">You have already voted on this question.</p>{% endif %}
+        {% else %}
+            <button class="button" id="vote-button" type="submit" name="vote">Vote</button>
+        {% endif %}
+        <a class="button button-secondary" href="{% url 'polls:results' question.id %}">See results</a>
+    </div>
+</form>
+
+<p><a href="{% url 'polls:index' %}">&larr; All polls</a></p>
+{% endblock %}

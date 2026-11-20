@@ -1,0 +1,23 @@
+{% extends "polls/base.html" %}
+
+{% block title %}Results: {{ question.question_text }}{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>{{ question.question_text }}</h1>
+    <ul class="results">
+    {% for choice in question.choice_set.all %}
+        <li>
+            <span>{{ choice.choice_text }}</span>
+            <span class="tag">{{ choice.votes }} vote{{ choice.votes|pluralize }}</span>
+        </li>
+    {% empty %}
+        <li class="empty">No choices yet.</li>
+    {% endfor %}
+    </ul>
+    <div class="actions">
+        <a class="button" href="{% url 'polls:detail' question.id %}">Vote again?</a>
+        <a class="button button-secondary" href="{% url 'polls:index' %}">All polls</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}{{ topic.name }}{% endblock %}
+
+{% block content %}
+<h1>{{ topic.name }}</h1>
+{% if topic.description %}<p class="lede">{{ topic.description }}</p>{% endif %}
+{% if quizzes %}
+<ul class="poll-list">
+    {% for quiz in quizzes %}
+    <li class="card">
+        <h2><a href="{% url 'quizzes:detail' quiz.slug %}">{{ quiz.title }}</a></h2>
+        <p class="meta">{{ quiz.pub_date|date:"j M Y" }}</p>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p class="empty">No quizzes in this topic yet.</p>
+{% endif %}
+<p><a href="{% url 'quizzes:index' %}">&larr; All topics</a></p>
+{% endblock %}

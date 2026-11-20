@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}{{ quiz.title }}{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>{{ quiz.title }}</h1>
+    <p class="meta"><a href="{% url 'quizzes:topic' quiz.topic.slug %}">{{ quiz.topic.name }}</a> · {{ quiz.question_count }} question{{ quiz.question_count|pluralize }}</p>
+    {% if quiz.description %}<p class="lede">{{ quiz.description }}</p>{% endif %}
+    <div class="actions">
+        {% if quiz.question_count == 0 %}
+            <p class="empty">This quiz has no questions yet.</p>
+        {% elif not user.is_authenticated %}
+            <a class="button" href="{% url 'accounts:login' %}?next={{ request.path|urlencode }}">Log in to take this quiz</a>
+        {% else %}
+            <a class="button" id="start-quiz" href="{% url 'quizzes:take' quiz.slug %}">Start quiz</a>
+            {% if best_attempt %}
+                <p class="meta">Best: {{ best_attempt.score }}/{{ best_attempt.total }} ({{ best_attempt.percent }}%) · {{ attempt_count }} attempt{{ attempt_count|pluralize }}</p>
+            {% else %}
+                <p class="meta">No attempts yet</p>
+            {% endif %}
+        {% endif %}
+    </div>
+</div>
+<p><a href="{% url 'quizzes:topic' quiz.topic.slug %}">&larr; {{ quiz.topic.name }}</a></p>
+{% endblock %}

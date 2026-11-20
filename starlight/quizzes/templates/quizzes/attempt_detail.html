@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}{{ attempt.quiz.title }} results{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>{{ attempt.quiz.title }}</h1>
+    <p class="lede">Score: {{ attempt.score }}/{{ attempt.total }} ({{ attempt.percent }}%)</p>
+    <ul class="results">
+    {% for answer in answers %}
+        <li>
+            <div>
+                <strong>{{ forloop.counter }}. {{ answer.question.text }}</strong>
+                <p class="meta">Your answer: {{ answer.selected_option.text|default:"No answer" }}</p>
+                {% if not answer.is_correct %}
+                    {% for option in answer.question.options.all %}{% if option.is_correct %}
+                    <p class="meta">Correct answer: {{ option.text }}</p>
+                    {% endif %}{% endfor %}
+                {% endif %}
+                {% if answer.question.explanation %}<p class="explanation">{{ answer.question.explanation }}</p>{% endif %}
+            </div>
+            <span class="tag {% if answer.is_correct %}tag-correct{% else %}tag-wrong{% endif %}">{% if answer.is_correct %}Correct{% else %}Wrong{% endif %}</span>
+        </li>
+    {% endfor %}
+    </ul>
+    <div class="actions">
+        <a class="button" href="{% url 'quizzes:take' attempt.quiz.slug %}">Retake</a>
+        <a class="button button-secondary" href="{% url 'quizzes:detail' attempt.quiz.slug %}">Back to quiz</a>
+        <a class="button button-secondary" href="{% url 'quizzes:attempts' %}">My attempts</a>
+    </div>
+</div>
+{% endblock %}

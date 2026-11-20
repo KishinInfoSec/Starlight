@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}My attempts{% endblock %}
+
+{% block content %}
+<h1>My attempts</h1>
+{% if attempts %}
+<ul class="poll-list">
+    {% for attempt in attempts %}
+    <li class="card">
+        <a href="{% url 'quizzes:attempt' attempt.pk %}">{{ attempt.quiz.title }} · {{ attempt.score }}/{{ attempt.total }} ({{ attempt.percent }}%) · {{ attempt.created|date:"j M Y, H:i" }}</a>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p class="empty">You haven't taken any quizzes yet.</p>
+{% endif %}
+<p><a href="{% url 'quizzes:index' %}">&larr; All topics</a></p>
+{% endblock %}

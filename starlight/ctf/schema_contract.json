@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "tables": {
+    "accounts_user": ["id", "handle", "profile_public"],
+    "ctf_challenge": ["id", "slug", "points", "pub_date", "flag_hmac"],
+    "ctf_solve": ["id", "user_id", "challenge_id", "solved_at"],
+    "ctf_submission": ["id", "user_id", "challenge_id", "correct", "created"],
+    "ctf_membership": ["id", "user_id", "group_id", "role"],
+    "ctf_practicegroup": ["id"]
+  }
+}

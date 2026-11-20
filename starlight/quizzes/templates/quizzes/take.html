@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}{{ quiz.title }}{% endblock %}
+
+{% block content %}
+<form class="card" method="post" action="{% url 'quizzes:take' quiz.slug %}">
+    {% csrf_token %}
+    <h1>{{ quiz.title }}</h1>
+    {% if error_message %}<p class="error" role="alert">{{ error_message }}</p>{% endif %}
+    {% for question in questions %}
+    <fieldset>
+        <legend>{{ forloop.counter }}. {{ question.text }}</legend>
+        {% for option in question.options.all %}
+        <div class="choice">
+            <input type="radio" name="question-{{ question.pk }}" id="q{{ question.pk }}-o{{ option.pk }}" value="{{ option.pk }}">
+            <label for="q{{ question.pk }}-o{{ option.pk }}">{{ option.text }}</label>
+        </div>
+        {% endfor %}
+    </fieldset>
+    {% empty %}
+        <p class="empty">This quiz has no questions yet.</p>
+    {% endfor %}
+    <div class="actions">
+        {% if questions %}<button class="button" id="submit-quiz" type="submit">Submit answers</button>{% endif %}
+        <a class="button button-secondary" href="{% url 'quizzes:detail' quiz.slug %}">Cancel</a>
+    </div>
+</form>
+{% endblock %}
